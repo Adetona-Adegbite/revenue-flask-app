@@ -56,7 +56,6 @@ def store_prediction_data(packet_data, prediction):
         "dst_host_rerror_rate": packet_data['dst_host_rerror_rate'],
         "dst_host_srv_rerror_rate": packet_data['dst_host_srv_rerror_rate'],
         "prediction": prediction,
-        "timestamp": datetime.datetime.utcnow(),
     }
     supabase.table('traffic_predictions').insert(data).execute()
 
