@@ -56,7 +56,6 @@ def store_prediction_data(packet_data, prediction):
         "dst_host_rerror_rate": packet_data['dst_host_rerror_rate'],
         "dst_host_srv_rerror_rate": packet_data['dst_host_srv_rerror_rate'],
         "prediction": prediction,
-        "timestamp": datetime.datetime.utcnow(),
     }
     supabase.table('traffic_predictions').insert(data).execute()
 
@@ -67,8 +66,10 @@ def predict():
         input_data = request.get_json()
         feature_df = pd.DataFrame([input_data])
         prediction = model.predict(feature_df)[0]
+        prediction = 1 if prediction == "anomaly" else 0
+        print(prediction)
         store_prediction_data(input_data, prediction)
-        return jsonify({"prediction": prediction.tolist()})
+        return jsonify({"prediction": prediction})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
